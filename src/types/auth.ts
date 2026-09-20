@@ -25,3 +25,8 @@ export interface ClientLoginResponse {
 }
 
 export type SessionKind = "staff" | "client";
+
+export type LoginResult =
+  | { mfaRequired: true }
+  | { kind: "staff"; user: StaffUser }
+  | { kind: "client"; client: ClientLoginResponse["client"] };
