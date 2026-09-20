@@ -1,26 +1,62 @@
 @import "tailwindcss";
 
+@theme {
+  --font-ui: var(--font-google-sans);
+  --font-righteous: var(--font-righteous);
+
+  --color-primary: #000000;
+  --color-background: #ffffff;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-wrapper {
+  min-height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #171717;
+  isolation: isolate; /* crée un nouveau contexte d'empilement local, garantit que -z-10 reste DANS ce composant */
+}
+
+.grid-background {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 0;
+  background-image: linear-gradient(to right, rgba(73, 73, 73, 0.185) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(73, 73, 73, 0.185) 1px, transparent 1px);
+  background-size: 20px 30px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+}
+
+.image-bg {
+  position: relative;
+  background-image: url("../../public/bg-image.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.image-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.image-bg > * {
+  position: relative;
+  z-index: 1;
 }
