@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { righteous, googleSans } from "@/lib/fonts";
+import Providers from "@/components/providers";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -19,7 +20,7 @@ export default function RootLayout({
             suppressHydrationWarning
         >
             <body className="min-h-full flex flex-col">
-                {children}
+                 <Providers>{children}</Providers>
             </body>
         </html>
     );
