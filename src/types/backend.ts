@@ -4,7 +4,7 @@ import { ApiError, normalizeMessages } from "@/lib/api/errors";
 
 const BASE_URL = process.env.BACKEND_URL;
 
-interface Options {
+export interface Options {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   token?: string;

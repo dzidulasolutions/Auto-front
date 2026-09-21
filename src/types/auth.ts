@@ -34,3 +34,11 @@ export type LoginResult =
 export type ActivateResult =
   | { kind: "client"; client: ClientLoginResponse["client"] }
   | { activated: true };
+
+export type ClientProfile = ClientLoginResponse["client"];
+
+export interface SessionUser {
+  firstName: string;
+  lastName: string;
+  label: string; // rôle (staff) ou numéro client
+}

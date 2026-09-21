@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { errorResponse } from "@/lib/api/proxy";
 import type { ActivateResult, ClientLoginResponse } from "@/types/auth";
 import { backendFetch } from "@/types/backend";
-import { setClientSession } from "@/types/session";
+import { setClientSession } from "@/lib/session";
 
 export async function POST(req: Request) {
   const { phone, email, password } = await req.json();
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       method: "POST",
       body: { phone: cleanPhone, password },
     });
-    await setClientSession(data.accessToken);
+    await setClientSession(data.accessToken, data.client);
     return NextResponse.json<ActivateResult>({ kind: "client", client: data.client });
   } catch {
     return NextResponse.json<ActivateResult>({ activated: true });

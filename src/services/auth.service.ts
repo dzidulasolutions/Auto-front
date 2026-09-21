@@ -38,3 +38,5 @@ export interface ActivateInput {
 
 export const activateClient = (input: ActivateInput) =>
   post<ActivateResult>("/api/auth/activate", input);
+
+export const logout = () => post<{ ok: true }>("/api/auth/logout", {});

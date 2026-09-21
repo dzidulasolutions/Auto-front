@@ -17,3 +17,6 @@ const ROLE_HOME: Record<Role, string> = {
 };
 
 export const homeForRole = (role: Role) => ROLE_HOME[role];
+
+export const isRole = (v: unknown): v is Role =>
+  typeof v === "string" && Object.hasOwn(ROLE_HOME, v);

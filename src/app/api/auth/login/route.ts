@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { ClientLoginResponse, LoginResult, StaffLoginResponse } from "@/types/auth";
 import { backendFetch } from "@/types/backend";
-import { setClientSession, setStaffSession } from "@/types/session";
+import { setClientSession, setStaffSession } from "@/lib/session";
 import { ApiError } from "@/lib/api/errors";
 
 export async function POST(req: Request) {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       body: { phone: String(identifier).trim(), password },
     });
 
-    await setClientSession(data.accessToken);
+    await setClientSession(data.accessToken, data.client);
     return NextResponse.json<LoginResult>({ kind: "client", client: data.client });
   } catch (e) {
     if (e instanceof ApiError) {
