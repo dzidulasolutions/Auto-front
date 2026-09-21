@@ -1,2 +1,2 @@
 export const authInputClass =
-  "w-full h-11 placeholder:text-white/50 text-white font-ui text-sm border outline-none border-white/30 p-4 bg-transparent focus:border-white transition-colors";
+  "w-full h-11 placeholder:text-white/50 text-white text-body border outline-none border-white/30 px-4 bg-transparent focus-visible:border-white transition-colors rounded-control";

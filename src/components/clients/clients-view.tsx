@@ -7,6 +7,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { getErrorMessage } from "@/lib/api/errors";
 import ClientRows from "./client-rows";
 import ClientsListSkeleton from "./clients-list-skeleton";
+import Button from "../ui/button";
 
 const LIMIT = 20;
 
@@ -34,7 +35,7 @@ export default function ClientsView() {
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Clients</h1>
+        <h1 className="text-h1 tracking-tight">Clients</h1>
         {subtitle && <p className="text-sm text-black/50">{subtitle}</p>}
       </header>
 
@@ -59,12 +60,7 @@ export default function ClientsView() {
       {current.isError && (
         <div className="bg-white p-6 flex flex-col items-start gap-4">
           <p className="text-sm">{getErrorMessage(current.error)}</p>
-          <button
-            onClick={() => current.refetch()}
-            className="h-10 px-5 bg-black text-white text-sm hover:bg-black/85 transition-colors"
-          >
-            Réessayer
-          </button>
+          <Button onClick={() => current.refetch()}>Réessayer</Button>
         </div>
       )}
 
@@ -92,23 +88,15 @@ export default function ClientsView() {
 
           {!searching && meta && meta.totalPages > 1 && (
             <div className="flex items-center justify-between mt-8 text-sm">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-                className="h-10 px-5 bg-white disabled:opacity-40 transition-opacity"
-              >
+              <Button variant="secondary" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
                 Précédent
-              </button>
+              </Button>
               <span className="text-black/50">
                 Page {meta.page} sur {meta.totalPages}
               </span>
-              <button
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= meta.totalPages}
-                className="h-10 px-5 bg-white disabled:opacity-40 transition-opacity"
-              >
+              <Button variant="secondary" size="sm" onClick={() => setPage((p) => p + 1)} disabled={page >= meta.totalPages}>
                 Suivant
-              </button>
+              </Button>
             </div>
           )}
         </div>

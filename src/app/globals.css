@@ -4,8 +4,64 @@
   --font-ui: var(--font-google-sans);
   --font-righteous: var(--font-righteous);
 
+  /* Couleurs — noir/blanc/gris, fonctionnelles en dernier recours seulement */
   --color-primary: #000000;
   --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-surface: #fafafa;
+  --color-muted: #737373;
+  --color-border: #e5e5e5;
+
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-error: #b91c1c;
+  --color-error-bg: #fef2f2;
+  --color-warning: #a16207;
+  --color-warning-bg: #fefce8;
+
+  /* Espacement — échelle 4px, à utiliser plutôt que des valeurs arbitraires */
+  --spacing-3xs: 0.25rem;  /* 4px */
+  --spacing-2xs: 0.5rem;   /* 8px */
+  --spacing-xs: 0.75rem;   /* 12px */
+  --spacing-sm: 1rem;      /* 16px */
+  --spacing-md: 1.5rem;    /* 24px */
+  --spacing-lg: 2rem;      /* 32px */
+  --spacing-xl: 3rem;      /* 48px */
+  --spacing-2xl: 4rem;     /* 64px */
+
+  /* Radius — deux valeurs seulement, cf. fiche design */
+  --radius-control: 0.25rem;  /* boutons, champs, badges */
+  --radius-surface: 0.5rem;   /* cards, modales */
+
+  /* Ombres — quasi absentes, juste pour détacher un overlay */
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Typographie — échelle fixe, ne pas en introduire d'autres */
+  --text-display: 2.25rem;   /* montant principal d'un écran */
+  --text-display--line-height: 1.15;
+  --text-display--font-weight: 600;
+
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 1.25;
+  --text-h1--font-weight: 600;
+
+  --text-h2: 1.125rem;
+  --text-h2--line-height: 1.3;
+  --text-h2--font-weight: 600;
+
+  --text-body: 0.9375rem;    /* 15px */
+  --text-body--line-height: 1.5;
+
+  --text-small: 0.8125rem;   /* 13px */
+  --text-small--line-height: 1.4;
+
+  --text-caption: 0.6875rem; /* 11px, métadonnées */
+  --text-caption--line-height: 1.3;
+
+  /* Chiffres financiers — chasse fixe pour l'alignement vertical des montants */
+  --text-numeric: 1rem;
+  --text-numeric--line-height: 1.4;
+  --font-numeric: var(--font-ui);
 }
 
 :root {
@@ -16,6 +72,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Montants : chiffres tabulaires pour un alignement propre dans les tableaux */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 .grid-wrapper {
