@@ -2,8 +2,7 @@ import { redirect } from "next/navigation";
 import { AREAS, type Area } from "@/config/areas";
 import { ROUTES } from "@/config/routes";
 import { getSessionUser } from "@/lib/session";
-import DesktopShell from "./desktop-shell";
-import MobileShell from "./mobile-shell";
+import AppShell from "./app-shell";
 
 export default async function AreaLayout({
   area,
@@ -15,10 +14,9 @@ export default async function AreaLayout({
   const user = await getSessionUser();
   if (!user) redirect(ROUTES.login);
 
-  const Shell = AREAS[area].shell === "desktop" ? DesktopShell : MobileShell;
   return (
-    <Shell area={area} user={user}>
+    <AppShell area={area} user={user} focus={AREAS[area].shell}>
       {children}
-    </Shell>
+    </AppShell>
   );
 }
