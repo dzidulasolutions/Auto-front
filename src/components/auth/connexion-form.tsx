@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Alert from "@/components/ui/alert";
-import { IconlyArrowRight, IconlyHide, IconlyLoader, IconlyShow } from "@/components/ui/icons";
+import { IconlyArrowRight, IconlyLoader } from "@/components/ui/icons";
 import { useLogin } from "@/hooks/use-login";
+import PasswordInput from "./password-input";
+import Link from "next/link";
+import { ROUTES } from "@/config/routes";
 
 const inputClass =
   "w-full h-11 placeholder:text-white/50 text-white font-ui text-sm border outline-none border-white/30 p-4 bg-transparent focus:border-white transition-colors";
@@ -14,7 +17,6 @@ export default function ConnexionForm() {
   const [identifier, setIdentifier] = useState(params.get("identifiant") ?? "");
   const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const { submit, loading, mfaRequired, error, clearError } = useLogin();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,9 +25,15 @@ export default function ConnexionForm() {
     submit({ identifier: identifier.trim(), password, ...(mfaRequired ? { mfaCode } : {}) });
   };
 
+  const [notice, setNotice] = useState<string | null>(
+  params.get("reset") ? "Mot de passe mis à jour. Connectez-vous." : null,
+);
+const clearNotice = useCallback(() => setNotice(null), []);
+
+
   return (
-    <section className="min-h-dvh bg-black flex justify-center p-4">
-      <div className="w-full lg:w-120 flex flex-col justify-center gap-12">
+    <section className="min-h-dvh bg-black flex image-bg justify-center p-4">
+      <div className="w-full lg:w-120 flex flex-col justify-between">
         <div className="font-ui font-bold text-xl text-white">Autogo.</div>
 
         <form onSubmit={handleSubmit} className="pb-6 flex flex-col gap-3">
@@ -36,6 +44,7 @@ export default function ConnexionForm() {
             </p>
           </div>
 
+          {notice && <Alert type="success" message={notice} onClose={clearNotice} />}
           {error && <Alert type="error" message={error} onClose={clearError} />}
 
           <input type="text"
@@ -47,29 +56,21 @@ export default function ConnexionForm() {
             className={inputClass}
           />
 
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe"
-              autoComplete="current-password"
-              required
-              className={`${inputClass} pr-12`}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-              className="absolute right-0 top-0 h-11 w-11 flex justify-center items-center text-white/60"
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mot de passe"
+            autoComplete="current-password"
+            required
+          />
+          {identifier.includes("@") && (
+            <Link
+              href={`${ROUTES.forgotPassword}?email=${encodeURIComponent(identifier)}`}
+              className="font-ui text-xs text-white/60 self-end"
             >
-              {showPassword ? (
-                <IconlyHide color="currentColor" size={20} />
-              ) : (
-                <IconlyShow color="currentColor" size={20} />
-              )}
-            </button>
-          </div>
+              Mot de passe oublié ?
+            </Link>
+          )}
 
           {mfaRequired && (
             <input

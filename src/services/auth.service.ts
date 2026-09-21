@@ -1,5 +1,18 @@
+import { ApiError } from "@/lib/api/errors";
 import type { LoginResult } from "@/types/auth";
-import { ApiError } from "@/types/errors";
+
+async function post<T>(url: string, body: unknown): Promise<T> {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new ApiError(res.status, json?.messages ?? ["Une erreur est survenue."]);
+  }
+  return json as T;
+}
 
 export interface LoginInput {
   identifier: string;
@@ -7,17 +20,10 @@ export interface LoginInput {
   mfaCode?: string;
 }
 
-export async function login(input: LoginInput): Promise<LoginResult> {
-  const res = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
+export const login = (input: LoginInput) => post<LoginResult>("/api/auth/login", input);
 
-  const json = await res.json().catch(() => null);
+export const forgotPassword = (email: string) =>
+  post<{ ok: true }>("/api/auth/forgot-password", { email });
 
-  if (!res.ok) {
-    throw new ApiError(res.status, json?.messages ?? ["Une erreur est survenue."]);
-  }
-  return json as LoginResult;
-}
+export const resetPassword = (input: { email: string; code: string; newPassword: string }) =>
+  post<{ ok: true }>("/api/auth/reset-password", input);

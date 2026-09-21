@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { ClientLoginResponse, LoginResult, StaffLoginResponse } from "@/types/auth";
 import { backendFetch } from "@/types/backend";
-import { ApiError } from "@/types/errors";
 import { setClientSession, setStaffSession } from "@/types/session";
+import { ApiError } from "@/lib/api/errors";
 
 export async function POST(req: Request) {
   const { identifier, password, mfaCode } = await req.json();

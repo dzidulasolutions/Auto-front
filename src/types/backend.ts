@@ -1,6 +1,6 @@
 import "server-only";
 import type { ApiResponse } from "@/types/api";
-import { ApiError, normalizeMessages } from "./errors";
+import { ApiError, normalizeMessages } from "@/lib/api/errors";
 
 const BASE_URL = process.env.BACKEND_URL;
 

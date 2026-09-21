@@ -15,3 +15,10 @@ export function normalizeMessages(message: string | string[] | undefined): strin
   if (!message) return [];
   return Array.isArray(message) ? message : [message];
 }
+
+export function getErrorMessage(e: unknown): string {
+  if (e instanceof ApiError) {
+    return e.isRateLimited ? "Trop de tentatives. Réessayez dans une minute." : e.message;
+  }
+  return "Une erreur est survenue. Réessayez.";
+}

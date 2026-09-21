@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { login, type LoginInput } from "@/services/auth.service";
 import { homeForRole, ROUTES } from "@/config/routes";
-import { ApiError } from "@/types/errors";
+import { getErrorMessage } from "@/lib/api/errors";
 
 export function useLogin() {
   const router = useRouter();
@@ -26,13 +26,11 @@ export function useLogin() {
       }
 
       localStorage.setItem("autogo_last_identifier", input.identifier);
-      router.replace(result.kind === "staff" ? homeForRole(result.user.role) : ROUTES.client);
+      router.replace(
+        result.kind === "staff" ? homeForRole(result.user.role) : ROUTES.client,
+      );
     } catch (e) {
-      if (e instanceof ApiError) {
-        setError(e.isRateLimited ? "Trop de tentatives. Réessayez dans une minute." : e.message);
-      } else {
-        setError("Connexion impossible. Réessayez.");
-      }
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }

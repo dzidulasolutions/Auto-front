@@ -3,6 +3,7 @@ import type { Role } from "@/types/auth";
 export const ROUTES = {
   login: "/connexion",
   client: "/client",
+  forgotPassword: "/mot-de-passe-oublie",
 } as const;
 
 const ROLE_HOME: Record<Role, string> = {
