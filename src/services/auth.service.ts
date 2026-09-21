@@ -1,5 +1,5 @@
 import { ApiError } from "@/lib/api/errors";
-import type { LoginResult } from "@/types/auth";
+import type { ActivateResult, LoginResult } from "@/types/auth"; 
 
 async function post<T>(url: string, body: unknown): Promise<T> {
   const res = await fetch(url, {
@@ -27,3 +27,14 @@ export const forgotPassword = (email: string) =>
 
 export const resetPassword = (input: { email: string; code: string; newPassword: string }) =>
   post<{ ok: true }>("/api/auth/reset-password", input);
+
+
+
+export interface ActivateInput {
+  phone: string;
+  email: string;
+  password: string;
+}
+
+export const activateClient = (input: ActivateInput) =>
+  post<ActivateResult>("/api/auth/activate", input);

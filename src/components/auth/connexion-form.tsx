@@ -26,7 +26,11 @@ export default function ConnexionForm() {
   };
 
   const [notice, setNotice] = useState<string | null>(
-  params.get("reset") ? "Mot de passe mis à jour. Connectez-vous." : null,
+  params.get("reset")
+    ? "Mot de passe mis à jour. Connectez-vous."
+    : params.get("activated")
+      ? "Compte activé. Connectez-vous."
+      : null,
 );
 const clearNotice = useCallback(() => setNotice(null), []);
 
@@ -100,6 +104,14 @@ const clearNotice = useCallback(() => setNotice(null), []);
               )}
             </span>
           </button>
+          {!identifier.includes("@") && (
+  <Link
+    href={`${ROUTES.activate}${identifier ? `?phone=${encodeURIComponent(identifier)}` : ""}`}
+    className="font-ui text-xs text-white/60 text-center mt-2"
+  >
+    Première connexion ? Activer mon compte
+  </Link>
+)}
         </form>
       </div>
     </section>

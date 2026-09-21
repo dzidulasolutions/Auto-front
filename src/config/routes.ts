@@ -4,6 +4,7 @@ export const ROUTES = {
   login: "/connexion",
   client: "/client",
   forgotPassword: "/mot-de-passe-oublie",
+  activate: "/activation",
 } as const;
 
 const ROLE_HOME: Record<Role, string> = {

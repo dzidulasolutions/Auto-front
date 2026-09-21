@@ -30,3 +30,7 @@ export type LoginResult =
   | { mfaRequired: true }
   | { kind: "staff"; user: StaffUser }
   | { kind: "client"; client: ClientLoginResponse["client"] };
+
+export type ActivateResult =
+  | { kind: "client"; client: ClientLoginResponse["client"] }
+  | { activated: true };
