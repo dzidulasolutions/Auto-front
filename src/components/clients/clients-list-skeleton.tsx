@@ -1,14 +1,21 @@
 import Skeleton from "@/components/ui/skeleton";
 
-export default function ClientsListSkeleton({ rows = 6 }: { rows?: number }) {
+interface Props {
+  rows?: number;
+  showBranch?: boolean;
+}
+
+export default function ClientsListSkeleton({ rows = 6, showBranch = true }: Props) {
   const items = Array.from({ length: rows });
+  const cols = showBranch
+    ? "grid-cols-[2fr_1.2fr_1.2fr_1.2fr_1fr]"
+    : "grid-cols-[2fr_1.2fr_1.2fr_1fr]";
 
   return (
     <>
-      {/* mobile */}
-      <ul className="lg:hidden flex flex-col gap-2">
+      <ul className="xl:hidden flex flex-col gap-2">
         {items.map((_, i) => (
-          <li key={i} className="bg-white p-4 flex items-center gap-3">
+          <li key={i} className="bg-white px-4 py-3 flex items-center gap-3">
             <Skeleton className="size-10 rounded-full shrink-0" />
             <div className="flex-1 flex flex-col gap-2">
               <Skeleton className="h-4 w-36" />
@@ -19,13 +26,9 @@ export default function ClientsListSkeleton({ rows = 6 }: { rows?: number }) {
         ))}
       </ul>
 
-      {/* desktop */}
-      <div className="hidden lg:flex flex-col gap-2">
+      <div className="hidden xl:flex flex-col gap-2">
         {items.map((_, i) => (
-          <div
-            key={i}
-            className="bg-white px-4 py-3 grid grid-cols-[2fr_1.2fr_1.2fr_1.2fr_1fr] items-center gap-4"
-          >
+          <div key={i} className={`bg-white px-5 py-4 grid ${cols} items-center gap-4`}>
             <div className="flex items-center gap-3">
               <Skeleton className="size-10 rounded-full shrink-0" />
               <div className="flex flex-col gap-2">
@@ -35,7 +38,7 @@ export default function ClientsListSkeleton({ rows = 6 }: { rows?: number }) {
             </div>
             <Skeleton className="h-4 w-28" />
             <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
+            {showBranch && <Skeleton className="h-4 w-32" />}
             <Skeleton className="h-4 w-20" />
           </div>
         ))}

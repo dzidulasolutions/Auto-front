@@ -20,3 +20,7 @@ export interface Client {
   updatedAt: string;
   branch?: ClientBranch;
 }
+
+export interface ClientSearchResult extends Client {
+  relevance: number;
+}
