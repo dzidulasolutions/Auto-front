@@ -28,7 +28,15 @@ async function forward(req: NextRequest, ctx: Ctx) {
   }
 }
 
-const SECRET_KEYS = new Set(["password", "passwordHash", "resetPasswordToken", "resetPasswordExpiresAt"]);
+const SECRET_KEYS = new Set([
+  "password",
+  "passwordHash",
+  "resetPasswordToken",
+  "resetPasswordExpiresAt",
+  "mfaSecret",
+  "verificationCode",
+  "verificationCodeExpiresAt",
+]);
 
 function strip(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(strip);

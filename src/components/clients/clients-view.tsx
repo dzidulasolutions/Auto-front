@@ -7,13 +7,21 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { getErrorMessage } from "@/lib/api/errors";
 import ClientRows from "./client-rows";
 import ClientsListSkeleton from "./clients-list-skeleton";
-import Button from "../ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import Button from "@/components/ui/button";
+import Modal from "@/components/ui/modal";
+import { IconlyPlus } from "@/components/ui/icons";
+import CreateClientForm from "./create-client-form";
+import { clientKeys } from "@/hooks/use-clients";
 
 const LIMIT = 20;
 
 export default function ClientsView() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const trimmed = query.trim();
   const debounced = useDebounce(trimmed, 500);
@@ -34,9 +42,15 @@ export default function ClientsView() {
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-h1 tracking-tight">Clients</h1>
-        {subtitle && <p className="text-sm text-black/50">{subtitle}</p>}
+      <header className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-h1">Clients</h1>
+          {subtitle && <p className="text-small text-muted">{subtitle}</p>}
+        </div>
+        <Button size="sm" onClick={() => setCreateOpen(true)} className="shrink-0">
+          <IconlyPlus size={16} color="currentColor" />
+          <span className="hidden sm:inline">Nouveau client</span>
+        </Button>
       </header>
 
       <div className="flex flex-col gap-2">
@@ -101,6 +115,16 @@ export default function ClientsView() {
           )}
         </div>
       )}
+
+      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nouveau client" variant="drawer">
+        <CreateClientForm
+          onSuccess={() => {
+            setCreateOpen(false);
+            queryClient.invalidateQueries({ queryKey: clientKeys.all });
+          }}
+        />
+      </Modal>
+
     </div>
   );
 }

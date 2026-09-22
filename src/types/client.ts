@@ -24,3 +24,13 @@ export interface Client {
 export interface ClientSearchResult extends Client {
   relevance: number;
 }
+
+export interface CreateClientInput {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email?: string;
+  photoUrl?: string;
+  idDocumentUrl?: string;
+  branchId?: string;
+}

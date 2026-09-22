@@ -121,3 +121,13 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* Défilement fonctionnel, scrollbar invisible — appliqué globalement */
+* {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* Edge/IE historiques */
+}
+
+*::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, Edge Chromium */
+}

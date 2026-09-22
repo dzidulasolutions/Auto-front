@@ -42,3 +42,5 @@ export interface SessionUser {
   lastName: string;
   label: string; // rôle (staff) ou numéro client
 }
+
+export const PRIVILEGED_ROLES: Role[] = ["SuperAdmin", "Admin"];
