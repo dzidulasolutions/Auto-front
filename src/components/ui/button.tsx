@@ -30,8 +30,10 @@ const Button = forwardRef<HTMLButtonElement, Props>(
       className={`font-ui font-medium rounded-control inline-flex items-center justify-center gap-2 transition-colors disabled:cursor-not-allowed ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
       {...props}
     >
-      {loading && <IconlyLoader size={16} color="currentColor" />}
-      {children}
+      <span className="inline-flex items-center gap-2">
+        {loading && <IconlyLoader size={16} color="currentColor" />}
+        {children}
+      </span>
     </button>
   ),
 );

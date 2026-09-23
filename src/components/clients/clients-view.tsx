@@ -13,6 +13,8 @@ import Modal from "@/components/ui/modal";
 import { IconlyPlus } from "@/components/ui/icons";
 import CreateClientForm from "./create-client-form";
 import { clientKeys } from "@/hooks/use-clients";
+import Alert from "@/components/ui/alert";
+
 
 const LIMIT = 20;
 
@@ -40,6 +42,8 @@ export default function ClientsView() {
     ? items && `${items.length} ${items.length > 1 ? "résultats" : "résultat"}`
     : meta && `${meta.total} ${meta.total > 1 ? "clients" : "client"}`;
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   return (
     <div className="flex flex-col gap-8">
       <header className="flex items-start justify-between gap-4">
@@ -52,6 +56,10 @@ export default function ClientsView() {
           <span className="hidden sm:inline">Nouveau client</span>
         </Button>
       </header>
+
+      {successMessage && (
+        <Alert type="success" message={successMessage} onClose={() => setSuccessMessage(null)} />
+      )}
 
       <div className="flex flex-col gap-2">
         <SearchInput
@@ -116,10 +124,19 @@ export default function ClientsView() {
         </div>
       )}
 
+      {/* <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nouveau client" variant="drawer">
+        <CreateClientForm
+          onSuccess={() => {
+            setCreateOpen(false);
+            queryClient.invalidateQueries({ queryKey: clientKeys.all });
+          }}
+        />
+      </Modal> */}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nouveau client" variant="drawer">
         <CreateClientForm
           onSuccess={() => {
             setCreateOpen(false);
+            setSuccessMessage("Client créé avec succès.");
             queryClient.invalidateQueries({ queryKey: clientKeys.all });
           }}
         />

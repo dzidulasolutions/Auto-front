@@ -1,6 +1,7 @@
 import { formatDate } from "@/lib/format";
 import type { Client } from "@/types/client";
 import ClientAvatar from "./client-avatar";
+import Link from "next/link";
 
 const COLS_WITH_BRANCH = "grid-cols-[2fr_1.2fr_1.2fr_1.2fr_1fr]";
 const COLS_NO_BRANCH = "grid-cols-[2fr_1.2fr_1.2fr_1fr]";
@@ -14,17 +15,20 @@ export default function ClientRows({ items }: { items: Client[] }) {
       {/* Mobile et tablette : cartes */}
       <ul className="xl:hidden flex flex-col gap-2">
         {items.map((c) => (
-          <li key={c.id} className="bg-white px-4 py-3 flex items-center gap-3">
+          <li key={c.id} className="relative bg-white px-4 py-3 flex items-center gap-3">
+            <Link href={`clients/${c.id}`} className="absolute inset-0" aria-label={`${c.firstName} ${c.lastName}`} />
+
             <ClientAvatar client={c} />
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 pointer-events-none">
               <p className="text-[15px] font-medium truncate">
                 {c.firstName} {c.lastName}
               </p>
               <p className="text-xs text-black/50">{c.clientNumber}</p>
             </div>
-            
-              <a href={`tel:${c.phone}`}
-              className="text-xs text-black/60 py-3 pl-2 hover:text-black transition-colors"
+
+
+            <a href={`tel:${c.phone}`}
+              className="relative z-10 text-xs text-black/60 py-3 pl-2 hover:text-black transition-colors"
             >
               {c.phone}
             </a>
@@ -43,9 +47,10 @@ export default function ClientRows({ items }: { items: Client[] }) {
         </div>
 
         {items.map((c) => (
-          <div
+          <Link
             key={c.id}
-            className={`bg-white px-5 py-4 grid ${cols} items-center gap-4 text-sm`}
+            href={`clients/${c.id}`}
+            className={`bg-white px-5 py-4 grid ${cols} items-center gap-4 text-sm hover:bg-surface transition-colors`}
           >
             <div className="flex items-center gap-3 min-w-0">
               <ClientAvatar client={c} />
@@ -60,7 +65,7 @@ export default function ClientRows({ items }: { items: Client[] }) {
             <span>{c.phone}</span>
             {showBranch && <span className="truncate">{c.branch?.name ?? "—"}</span>}
             <span className="text-black/60">{formatDate(c.createdAt)}</span>
-          </div>
+          </Link>
         ))}
       </div>
     </>

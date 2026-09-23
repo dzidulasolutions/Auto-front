@@ -27,3 +27,4 @@ export function useClientSearch(q: string) {
     placeholderData: keepPreviousData,
   });
 }
+

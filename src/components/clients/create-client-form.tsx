@@ -10,6 +10,7 @@ import { useCurrentRole } from "@/hooks/use-current-role";
 import { PRIVILEGED_ROLES } from "@/types/auth";
 import { getErrorMessage } from "@/lib/api/errors";
 import PhotoPicker from "./photo-picker";
+import DocumentPicker from "./document-picker";
 
 interface Props {
   onSuccess: () => void;
@@ -26,7 +27,7 @@ export default function CreateClientForm({ onSuccess }: Props) {
   const [branchId, setBranchId] = useState("");
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [branchError, setBranchError] = useState<string | null>(null);
-
+const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>();
 const { role } = useCurrentRole();
 const needsBranch = !!role && PRIVILEGED_ROLES.includes(role);
 const { data: branches, isLoading: branchesLoading } = useBranches(role);
@@ -62,7 +63,7 @@ const { data: branches, isLoading: branchesLoading } = useBranches(role);
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PhotoPicker onUploaded={setPhotoUrl} />
-
+      <DocumentPicker onUploaded={setIdDocumentUrl}/>
       <Input
         placeholder="Prénom"
         value={firstName}

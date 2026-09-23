@@ -33,4 +33,14 @@ export interface CreateClientInput {
   photoUrl?: string;
   idDocumentUrl?: string;
   branchId?: string;
+  
+}
+
+export interface UpdateClientInput {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email?: string;
+  photoUrl?: string;
+  idDocumentUrl?: string;
 }

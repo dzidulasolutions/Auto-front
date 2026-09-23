@@ -15,10 +15,13 @@ export default function RootLayout({
 }>) {
     return (
         <html
-            lang="fr"
+            lang="fr" translate="no"
             className={`${righteous.variable} ${googleSans.variable} h-full antialiased`}
             suppressHydrationWarning
         >
+            <head>
+                <meta name="google" content="notranslate" />
+            </head>
             <body className="min-h-full flex flex-col">
                  <Providers>{children}</Providers>
             </body>
