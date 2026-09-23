@@ -22,7 +22,7 @@ export default function TransactionRow({ tx }: { tx: Transaction }) {
       {tx.status === "CANCELLED" && <Badge tone="error">Annulée</Badge>}
 
       <span
-        className={`shrink-0 h-8 px-3 flex items-center rounded-control text-numeric font-numeric tabular-nums ${
+        className={`shrink-0 h-8 px-3 flex items-center rounded-control font-numeric text-xs tabular-nums ${
           isCredit ? "bg-success-bg text-success" : "bg-error-bg text-error"
         } ${tx.status === "CANCELLED" ? "opacity-50" : ""}`}
       >

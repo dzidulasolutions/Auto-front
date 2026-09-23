@@ -9,7 +9,6 @@ import Modal from "@/components/ui/modal";
 import { IconlyDocument } from "@/components/ui/icons";
 import { getErrorMessage } from "@/lib/api/errors";
 import { formatDate } from "@/lib/format";
-import { ROUTES } from "@/config/routes";
 import ClientAvatar from "./client-avatar";
 import ClientDetailSkeleton from "./client-detail-skeleton";
 import { useClient, useProfileComplete } from "@/hooks/use-client";
@@ -17,6 +16,8 @@ import { useDeleteClient } from "@/hooks/use-delete-client";
 import EditClientForm from "./edit-client-form";
 import { IconlyEdit, IconlyTrash } from "@/components/ui/icons";
 import ClientTransactions from "@/components/transactions/client-transactions";
+import ClientSavings from "@/components/savings/client-savings";
+
 
 export default function ClientDetailView({ id, area }: { id: string; area: string }) {
   const router = useRouter();
@@ -135,6 +136,7 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
         </div>
       </Modal>
       <ClientTransactions clientId={client.id} />
+      <ClientSavings clientId={client.id} />
     </div>
   );
 }
