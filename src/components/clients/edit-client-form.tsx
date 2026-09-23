@@ -7,8 +7,8 @@ import Input from "@/components/ui/input";
 import { useUpdateClient } from "@/hooks/use-update-client";
 import { getErrorMessage } from "@/lib/api/errors";
 import type { Client } from "@/types/client";
-import PhotoPicker from "./photo-picker";
 import DocumentPicker from "./document-picker";
+import PhotoPicker from "./photo-picker";
 
 interface Props {
   client: Client;
@@ -23,11 +23,12 @@ export default function EditClientForm({ client, onSuccess }: Props) {
   const [phone, setPhone] = useState(client.phone);
   const [email, setEmail] = useState(client.email ?? "");
   const [photoUrl, setPhotoUrl] = useState<string | undefined>(client.photoUrl ?? undefined);
+  const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>(
+    client.idDocumentUrl ?? undefined,
+  );
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
-const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>(
-  /* edit seulement : */ client.idDocumentUrl ?? undefined,
-);
+
   const { mutate, isPending, error, reset } = useUpdateClient(client.id);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,6 +48,7 @@ const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>(
         phone: trimmedPhone,
         email: email.trim() || undefined,
         photoUrl,
+        idDocumentUrl,
       },
       { onSuccess, onError: () => setShowError(true) },
     );
@@ -55,7 +57,8 @@ const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>(
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PhotoPicker onUploaded={setPhotoUrl} initialUrl={client.photoUrl} />
-      <DocumentPicker onUploaded={setIdDocumentUrl} /* edit seulement : */ initialUrl={client.idDocumentUrl} />
+      <DocumentPicker onUploaded={setIdDocumentUrl} initialUrl={client.idDocumentUrl} />
+
       <Input
         placeholder="Prénom"
         value={firstName}

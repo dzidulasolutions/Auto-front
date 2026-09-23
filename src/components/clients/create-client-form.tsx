@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
@@ -9,8 +10,8 @@ import { useCreateClient } from "@/hooks/use-create-client";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { PRIVILEGED_ROLES } from "@/types/auth";
 import { getErrorMessage } from "@/lib/api/errors";
-import PhotoPicker from "./photo-picker";
 import DocumentPicker from "./document-picker";
+import PhotoPicker from "./photo-picker";
 
 interface Props {
   onSuccess: () => void;
@@ -24,19 +25,22 @@ export default function CreateClientForm({ onSuccess }: Props) {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string | undefined>();
+  const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>();
   const [branchId, setBranchId] = useState("");
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [branchError, setBranchError] = useState<string | null>(null);
-const [idDocumentUrl, setIdDocumentUrl] = useState<string | undefined>();
-const { role } = useCurrentRole();
-const needsBranch = !!role && PRIVILEGED_ROLES.includes(role);
-const { data: branches, isLoading: branchesLoading } = useBranches(role);
+  const [showError, setShowError] = useState(false);
+
+  const { role } = useCurrentRole();
+  const needsBranch = !!role && PRIVILEGED_ROLES.includes(role);
+  const { data: branches, isLoading: branchesLoading } = useBranches(role);
 
   const { mutate, isPending, error, reset } = useCreateClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     reset();
+    setShowError(false);
 
     const trimmedPhone = phone.trim();
     const phoneOk = PHONE_PATTERN.test(trimmedPhone);
@@ -54,16 +58,18 @@ const { data: branches, isLoading: branchesLoading } = useBranches(role);
         phone: trimmedPhone,
         email: email.trim() || undefined,
         photoUrl,
+        idDocumentUrl,
         ...(needsBranch ? { branchId } : {}),
       },
-      { onSuccess },
+      { onSuccess, onError: () => setShowError(true) },
     );
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PhotoPicker onUploaded={setPhotoUrl} />
-      <DocumentPicker onUploaded={setIdDocumentUrl}/>
+      <DocumentPicker onUploaded={setIdDocumentUrl} />
+
       <Input
         placeholder="Prénom"
         value={firstName}
@@ -108,7 +114,9 @@ const { data: branches, isLoading: branchesLoading } = useBranches(role);
         </Select>
       )}
 
-      {error && <p className="text-small text-error">{getErrorMessage(error)}</p>}
+      {showError && error && (
+        <Alert type="error" message={getErrorMessage(error)} onClose={() => setShowError(false)} />
+      )}
 
       <Button type="submit" loading={isPending} className="mt-2">
         Créer le client
