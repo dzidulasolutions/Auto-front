@@ -23,9 +23,10 @@ export async function backendFetch<T>(path: string, opts: Options = {}): Promise
       },
       body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
       cache: "no-store",
+      signal: AbortSignal.timeout(20_000), // évite un blocage indéfini si Render ne répond jamais
     });
   } catch {
-    throw new ApiError(503, ["Serveur injoignable. Réessayez."]);
+    throw new ApiError(503, ["Serveur indisponible. Réessayez dans un instant."]);
   }
 
   const json = (await res.json().catch(() => null)) as ApiResponse<T> | null;

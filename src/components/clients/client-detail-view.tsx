@@ -16,6 +16,8 @@ import { useClient, useProfileComplete } from "@/hooks/use-client";
 import { useDeleteClient } from "@/hooks/use-delete-client";
 import EditClientForm from "./edit-client-form";
 import { IconlyEdit, IconlyTrash } from "@/components/ui/icons";
+import ClientTransactions from "@/components/transactions/client-transactions";
+
 export default function ClientDetailView({ id, area }: { id: string; area: string }) {
   const router = useRouter();
   const { data: client, isPending, isError, error, refetch } = useClient(id);
@@ -132,6 +134,7 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
           </div>
         </div>
       </Modal>
+      <ClientTransactions clientId={client.id} />
     </div>
   );
 }

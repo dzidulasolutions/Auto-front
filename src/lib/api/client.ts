@@ -11,16 +11,20 @@ interface Options {
 export async function api<T>(path: string, opts: Options = {}): Promise<T> {
   const hasBody = opts.body !== undefined;
 
-  const res = await fetch(`/api/backend${path}`, {
-    method: opts.method ?? "GET",
-    headers: hasBody ? { "Content-Type": "application/json" } : undefined,
-    body: hasBody ? JSON.stringify(opts.body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`/api/backend${path}`, {
+      method: opts.method ?? "GET",
+      headers: hasBody ? { "Content-Type": "application/json" } : undefined,
+      body: hasBody ? JSON.stringify(opts.body) : undefined,
+    });
+  } catch {
+    throw new ApiError(503, ["Connexion impossible. Vérifiez votre réseau."]);
+  }
 
   const json = await res.json().catch(() => null);
 
   if (!res.ok) {
-    // Session expirée et non renouvelable : retour à la connexion
     if (res.status === 401) window.location.assign(ROUTES.login);
     throw new ApiError(res.status, json?.messages ?? ["Une erreur est survenue."]);
   }

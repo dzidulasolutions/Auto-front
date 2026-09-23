@@ -1,4 +1,6 @@
-import { forwardRef } from "react";
+"use client";
+
+import { forwardRef, useEffect, useState } from "react";
 import { IconlyLoader } from "./icons";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
@@ -8,6 +10,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
+  loadingHint?: string;
 }
 
 const VARIANTS: Record<Variant, string> = {
@@ -23,19 +26,35 @@ const SIZES: Record<Size, string> = {
 };
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ variant = "primary", size = "md", loading, disabled, className = "", children, ...props }, ref) => (
-    <button
-      ref={ref}
-      disabled={disabled || loading}
-      className={`font-ui font-medium rounded-control inline-flex items-center justify-center gap-2 transition-colors disabled:cursor-not-allowed ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
-      {...props}
-    >
-      <span className="inline-flex items-center gap-2">
-        {loading && <IconlyLoader size={16} color="currentColor" />}
-        {children}
-      </span>
-    </button>
-  ),
+  (
+    { variant = "primary", size = "md", loading, loadingHint, disabled, className = "", children, ...props },
+    ref,
+  ) => {
+    const [showHint, setShowHint] = useState(false);
+
+    useEffect(() => {
+      if (!loading) {
+        setShowHint(false);
+        return;
+      }
+      const t = setTimeout(() => setShowHint(true), 6000);
+      return () => clearTimeout(t);
+    }, [loading]);
+
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || loading}
+        className={`font-ui font-medium rounded-control inline-flex items-center justify-center gap-2 transition-colors disabled:cursor-not-allowed ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+        {...props}
+      >
+        <span className="inline-flex items-center gap-2">
+          {loading && <IconlyLoader size={16} color="currentColor" />}
+          {loading && showHint && loadingHint ? loadingHint : children}
+        </span>
+      </button>
+    );
+  },
 );
 Button.displayName = "Button";
 

@@ -51,10 +51,10 @@ export async function authedFetch<T>(
   try {
     return await backendFetch<T>(path, { ...opts, token });
   } catch (e) {
-    if (e instanceof ApiError && e.statusCode === 401 && canRefresh) {
-      const fresh = await renew(session.refreshToken!);
-      return backendFetch<T>(path, { ...opts, token: fresh });
-    }
-    throw e;
+  if (e instanceof ApiError && e.statusCode === 401 && canRefresh) {
+    const fresh = await renew(session.refreshToken!);
+    return backendFetch<T>(path, { ...opts, token: fresh });
   }
+  throw e;
+}
 }
