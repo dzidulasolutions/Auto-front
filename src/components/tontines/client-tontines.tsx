@@ -11,6 +11,8 @@ import { getErrorMessage } from "@/lib/api/errors";
 import { CYCLE_STATUS_LABELS } from "@/types/tontine";
 import CreateTontineForm from "./create-tontine-form";
 import TontinePassbook from "./tontine-passbook";
+import ExpandableList from "@/components/ui/expandable-list";
+
 
 export default function ClientTontines({ clientId }: { clientId: string }) {
   const { data, isPending, isError, error, refetch } = useTontinesByClient(clientId);
@@ -47,26 +49,26 @@ export default function ClientTontines({ clientId }: { clientId: string }) {
       )}
 
       {data && data.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {data.map((cycle) => (
-            <li key={cycle.id}>
-              <button
-                onClick={() => setOpenCycleId(cycle.id)}
-                className="w-full bg-white px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-surface transition-colors"
-              >
-                <div>
-                  <p className="text-body font-medium">{cycle.cycleNumber}</p>
-                  <p className="text-caption text-muted">
-                    {cycle.amountPerCollection} FCFA · {cycle.durationMonths} mois
-                  </p>
-                </div>
-                <Badge tone={cycle.status === "ACTIVE" ? "neutral" : "success"}>
-                  {CYCLE_STATUS_LABELS[cycle.status] ?? cycle.status}
-                </Badge>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <ExpandableList
+          items={data}
+          className="flex flex-col gap-2"
+          renderItem={(cycle) => (
+            <button
+              onClick={() => setOpenCycleId(cycle.id)}
+              className="w-full bg-white px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-surface transition-colors"
+            >
+              <div>
+                <p className="text-body font-medium">{cycle.cycleNumber}</p>
+                <p className="text-caption text-muted">
+                  {cycle.amountPerCollection} FCFA · {cycle.durationMonths} mois
+                </p>
+              </div>
+              <Badge tone={cycle.status === "ACTIVE" ? "neutral" : "success"}>
+                {CYCLE_STATUS_LABELS[cycle.status] ?? cycle.status}
+              </Badge>
+            </button>
+          )}
+        />
       )}
 
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nouveau cycle de tontine" variant="drawer">

@@ -5,6 +5,8 @@ import { useTransactions } from "@/hooks/use-transactions";
 import { getErrorMessage } from "@/lib/api/errors";
 import TransactionRow from "./transaction-row";
 import TransactionsListSkeleton from "./transactions-list-skeleton";
+import ExpandableList from "@/components/ui/expandable-list";
+
 
 export default function ClientTransactions({ clientId }: { clientId: string }) {
   const { data, isPending, isError, error, refetch } = useTransactions({ clientId, limit: 10 });
@@ -30,12 +32,13 @@ export default function ClientTransactions({ clientId }: { clientId: string }) {
         </div>
       )}
 
+
       {data && data.items.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {data.items.map((tx) => (
-            <TransactionRow key={tx.id} tx={tx} />
-          ))}
-        </ul>
+        <ExpandableList
+          items={data.items}
+          className="flex flex-col gap-2"
+          renderItem={(tx) => <TransactionRow tx={tx} />}
+        />
       )}
     </div>
   );
