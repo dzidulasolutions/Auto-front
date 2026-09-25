@@ -18,6 +18,9 @@ import { IconlyEdit, IconlyTrash } from "@/components/ui/icons";
 import ClientTransactions from "@/components/transactions/client-transactions";
 import ClientSavings from "@/components/savings/client-savings";
 import ClientTontines from "@/components/tontines/client-tontines";
+import ClientLoans from "@/components/loans/client-loans";
+
+
 
 export default function ClientDetailView({ id, area }: { id: string; area: string }) {
   const router = useRouter();
@@ -138,6 +141,7 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
       <ClientTransactions clientId={client.id} />
       <ClientSavings clientId={client.id} />
       <ClientTontines clientId={client.id} />
+      <ClientLoans clientId={client.id} onOpenLoan={(loanId) => router.push(`${area}/loans/${loanId}`)} />
     </div>
   );
 }
