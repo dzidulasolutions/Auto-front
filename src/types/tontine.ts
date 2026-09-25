@@ -76,3 +76,7 @@ export function collectionStatusTone(status: string): "neutral" | "success" | "w
   if (status.includes("MANQ") || status.includes("RETARD")) return "error";
   return "neutral";
 }
+
+export function isOverdue(collection: Pick<TontineCollection, "status" | "scheduledDate">): boolean {
+  return collection.status === "A_COLLECTER" && new Date(collection.scheduledDate) < new Date();
+}
