@@ -1,4 +1,4 @@
-import { IconlyHome, IconlyUser } from "@/components/ui/icons";
+import { IconlyHome, IconlyUser, IconlyWallet } from "@/components/ui/icons";
 
 export type Area = "admin" | "manager" | "agent" | "caissier" | "comptable" | "client";
 
@@ -28,16 +28,22 @@ const clients = (base: string): NavItem => ({
   icon: IconlyUser,
 });
 
+const loans = (base: string): NavItem => ({
+  label: "Prêts",
+  href: `${base}/loans`,
+  icon: IconlyWallet,
+});
+
 export const AREAS: Record<Area, AreaConfig> = {
   admin: {
     title: "Administration",
     shell: "desktop",
-    nav: [accueil("/admin"), clients("/admin")],
+    nav: [accueil("/admin"), clients("/admin"), loans("/admin")],
   },
   manager: {
     title: "Agence",
     shell: "desktop",
-    nav: [accueil("/manager"), clients("/manager")],
+    nav: [accueil("/manager"), clients("/manager"), loans("/manager")],
   },
   comptable: {
     title: "Comptabilité",
@@ -47,12 +53,12 @@ export const AREAS: Record<Area, AreaConfig> = {
   agent: {
     title: "Agent",
     shell: "mobile",
-    nav: [accueil("/agent"), clients("/agent")],
+    nav: [accueil("/agent"), clients("/agent"), loans("/agent")],
   },
   caissier: {
     title: "Caisse",
     shell: "mobile",
-    nav: [accueil("/caissier"), clients("/caissier")],
+    nav: [accueil("/caissier"), clients("/caissier"), loans("/caisier")],
   },
   client: {
     title: "Mon espace",

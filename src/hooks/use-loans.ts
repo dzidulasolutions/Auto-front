@@ -12,8 +12,7 @@ import {
   submitLoan,
   type ListLoansParams,
 } from "@/services/loans.service";
-import type { CreateLoanInput, Loan } from "@/types/loan";
-
+import type { CreateLoanInput, Loan, LoanStatus } from "@/types/loan";
 export const loanKeys = {
   all: ["loans"] as const,
   list: (p: ListLoansParams) => ["loans", "list", p] as const,
@@ -110,3 +109,11 @@ export function useRepayLoan(clientId: string, loanId: string) {
   });
 }
 
+
+export function useAllLoans(status?: LoanStatus, page = 1, limit = 20) {
+  return useQuery({
+    queryKey: loanKeys.list({ status, page, limit }),
+    queryFn: () => listLoans({ status, page, limit }),
+    placeholderData: (prev) => prev,
+  });
+}
