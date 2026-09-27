@@ -1,5 +1,7 @@
-import { api } from "@/lib/api/client";
+import { api , qs} from "@/lib/api/client";
 import { newIdempotencyKey } from "@/lib/idempotency";
+import type { Paginated } from "@/types/api";
+
 import type {
   CreateTontineInput,
   TontineCollectionsResponse,
@@ -29,3 +31,9 @@ export const closeTontineCycle = (cycleId: string) =>
     method: "PATCH",
     body: { idempotencyKey: newIdempotencyKey() },
   });
+
+
+export const listAllTontines = (page = 1, limit = 20, status?: string) =>
+  api<Paginated<TontineCycle & { client: { firstName: string; lastName: string; clientNumber: string } }>>(
+    `/tontines/cycles${qs({ page, limit, status })}`,
+  );

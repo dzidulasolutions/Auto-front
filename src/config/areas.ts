@@ -1,4 +1,4 @@
-import { IconlyHome, IconlyUser, IconlyWallet } from "@/components/ui/icons";
+import { IconlyHome, IconlyUser, IconlyWallet, IconlyDiscount, IconlyGraph } from "@/components/ui/icons";
 
 export type Area = "admin" | "manager" | "agent" | "caissier" | "comptable" | "client";
 
@@ -34,16 +34,28 @@ const loans = (base: string): NavItem => ({
   icon: IconlyWallet,
 });
 
+const savings = (base: string): NavItem => ({
+  label: "Épargne",
+  href: `${base}/savings`,
+  icon: IconlyDiscount,
+});
+
+const tontines = (base: string): NavItem => ({
+  label: "Tontines",
+  href: `${base}/tontines`,
+  icon: IconlyGraph,
+});
+
 export const AREAS: Record<Area, AreaConfig> = {
   admin: {
     title: "Administration",
     shell: "desktop",
-    nav: [accueil("/admin"), clients("/admin"), loans("/admin")],
+    nav: [accueil("/admin"), clients("/admin"), loans("/admin"), savings("/admin"), tontines("/admin")],
   },
   manager: {
     title: "Agence",
     shell: "desktop",
-    nav: [accueil("/manager"), clients("/manager"), loans("/manager")],
+    nav: [accueil("/manager"), clients("/manager"), loans("/manager"), savings("/manager"), tontines("/manager")],
   },
   comptable: {
     title: "Comptabilité",
@@ -53,12 +65,12 @@ export const AREAS: Record<Area, AreaConfig> = {
   agent: {
     title: "Agent",
     shell: "mobile",
-    nav: [accueil("/agent"), clients("/agent"), loans("/agent")],
+    nav: [accueil("/agent"), clients("/agent"), loans("/agent"), savings("/agent"), tontines("/agent")],
   },
   caissier: {
     title: "Caisse",
     shell: "mobile",
-    nav: [accueil("/caissier"), clients("/caissier"), loans("/caisier")],
+    nav: [accueil("/caissier"), clients("/caissier"), loans("/caissier"), savings("/caissier"), tontines("/caissier")],
   },
   client: {
     title: "Mon espace",

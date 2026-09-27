@@ -7,6 +7,7 @@ import {
   getTontineCollections,
   listTontinesByClient,
   validateCollection,
+  listAllTontines
 } from "@/services/tontines.service";
 import type { CreateTontineInput } from "@/types/tontine";
 
@@ -60,5 +61,14 @@ export function useCloseTontine(cycleId: string, clientId: string) {
       queryClient.invalidateQueries({ queryKey: tontineKeys.byClient(clientId) });
       queryClient.invalidateQueries({ queryKey: ["transactions"] }); // la restitution aussi
     },
+  });
+}
+
+
+export function useAllTontines(status?: string, page = 1, limit = 20) {
+  return useQuery({
+    queryKey: ["tontines", "list", status, page, limit],
+    queryFn: () => listAllTontines(page, limit, status),
+    placeholderData: (prev) => prev,
   });
 }

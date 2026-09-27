@@ -1,6 +1,8 @@
-import { api } from "@/lib/api/client";
+import { api, qs } from "@/lib/api/client";
 import type { SavingsAccount } from "@/types/savings";
 import { ApiError } from "@/lib/api/errors";
+import type { Paginated } from "@/types/api";
+
 
 export const createSavingsAccount = (clientId: string) =>
   api<SavingsAccount>("/savings/accounts", { method: "POST", body: { clientId } });
@@ -26,3 +28,8 @@ export const getSavingsAccountByClient = async (clientId: string): Promise<Savin
     throw e;
   }
 };
+
+export const listAllSavingsAccounts = (page = 1, limit = 20) =>
+  api<Paginated<SavingsAccount & { client: { firstName: string; lastName: string; clientNumber: string } }>>(
+    `/savings/accounts${qs({ page, limit })}`,
+  );
