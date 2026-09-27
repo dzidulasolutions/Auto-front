@@ -1,3 +1,5 @@
+import type { Role } from "./auth";
+
 export type LoanStatus =
   | "DRAFT"
   | "PENDING_APPROVAL"
@@ -86,4 +88,27 @@ export function scheduleStatusTone(status: LoanScheduleStatus): "neutral" | "suc
   if (status === "OVERDUE") return "error";
   if (status === "CANCELLED") return "neutral";
   return "neutral"; // PENDING
+}
+
+export type LoanAction = "submit" | "approve" | "reject" | "disburse";
+
+export function availableActions(status: LoanStatus): LoanAction[] {
+  switch (status) {
+    case "DRAFT":
+      return ["submit"];
+    case "PENDING_APPROVAL":
+      return ["approve", "reject"];
+    case "APPROVED":
+      return ["disburse"];
+    default:
+      return []; // REJECTED, DISBURSED, CLOSED : plus d'action de cycle de vie
+  }
+}
+
+export function availableActionsForRole(status: LoanStatus, role: Role): LoanAction[] {
+  const canApprove = ["SuperAdmin", "Admin", "Manager"].includes(role);
+  return availableActions(status).filter((action) => {
+    if (action === "approve" || action === "reject") return canApprove;
+    return true; // submit, disburse restent ouverts à Agent/Caissier selon le contrat
+  });
 }

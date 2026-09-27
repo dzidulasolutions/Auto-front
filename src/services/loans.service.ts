@@ -27,8 +27,15 @@ export const approveLoan = (id: string) => api<Loan>(`/loans/${id}/approve`, { m
 export const rejectLoan = (id: string, reason: string) =>
   api<Loan>(`/loans/${id}/reject`, { method: "PATCH", body: { reason } });
 
+export interface DisburseLoanResult {
+  loan: Loan;
+  totalToRepay: number;
+  amountPerInstallment: number;
+  numberOfInstallments: number;
+}
+
 export const disburseLoan = (id: string) =>
-  api<LoanWithSchedule>(`/loans/${id}/disburse`, {
+  api<DisburseLoanResult>(`/loans/${id}/disburse`, {
     method: "PATCH",
     body: { idempotencyKey: newIdempotencyKey() },
   });
