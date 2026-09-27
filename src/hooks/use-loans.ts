@@ -94,14 +94,19 @@ export function useDisburseLoan(clientId: string, loanId: string) {
   });
 }
 
+
 export function useRepayLoan(clientId: string, loanId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (amount: number) => repayLoan(loanId, amount),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      queryClient.setQueryData(loanKeys.detail(loanId), (old: unknown) =>
+        old ? { ...(old as object), ...result.loan } : result.loan,
+      );
       queryClient.invalidateQueries({ queryKey: loanKeys.detail(loanId) });
       queryClient.invalidateQueries({ queryKey: loanKeys.list({ clientId }) });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
   });
 }
+

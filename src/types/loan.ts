@@ -112,3 +112,7 @@ export function availableActionsForRole(status: LoanStatus, role: Role): LoanAct
     return true; // submit, disburse restent ouverts à Agent/Caissier selon le contrat
   });
 }
+
+export function isScheduleOverdue(item: Pick<LoanScheduleItem, "status" | "dueDate">): boolean {
+  return item.status === "PENDING" && new Date(item.dueDate) < new Date();
+}

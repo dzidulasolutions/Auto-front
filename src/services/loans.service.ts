@@ -40,8 +40,14 @@ export const disburseLoan = (id: string) =>
     body: { idempotencyKey: newIdempotencyKey() },
   });
 
+
+  export interface RepayLoanResult {
+  loan: Loan;
+  transaction: unknown;
+}
+
 export const repayLoan = (id: string, amount: number) =>
-  api(`/loans/${id}/repay`, {
+  api<RepayLoanResult>(`/loans/${id}/repay`, {
     method: "PATCH",
     body: { amount, idempotencyKey: newIdempotencyKey() },
   });
