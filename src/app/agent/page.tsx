@@ -1,3 +1,5 @@
+import DailyCollectionsView from "@/components/dashboard/daily-collections-view";
+
 export default function Page() {
-  return <h1 className="text-2xl font-bold">Accueil</h1>;
+  return <DailyCollectionsView />;
 }

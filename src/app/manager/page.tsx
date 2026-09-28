@@ -1,3 +1,12 @@
+import BranchSummaryView from "@/components/dashboard/branch-summary-view";
+import PortfolioAtRiskView from "@/components/dashboard/portfolio-at-risk-view";
+
 export default function Page() {
-  return <h1 className="text-2xl font-bold">Accueil</h1>;
+  return (
+    <div className="flex flex-col gap-8">
+      <h1 className="text-h1">Accueil</h1>
+      <BranchSummaryView />
+      <PortfolioAtRiskView area="/manager" />
+    </div>
+  );
 }
