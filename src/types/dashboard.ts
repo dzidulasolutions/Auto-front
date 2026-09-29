@@ -32,3 +32,22 @@ export interface DailyCollection {
   amount_due: string; // observé en chaîne dans le JSON réel
   status: string;
 }
+
+export type ReportStatus = "PENDING" | "READY" | "FAILED";
+
+export interface Report {
+  id: string;
+  branchId: string;
+  month: number;
+  year: number;
+  status: ReportStatus;
+  fileUrl: string | null;
+  requestedById: string | null;
+  createdAt: string;
+}
+
+export interface RequestReportInput {
+  branchId: string;
+  month: number;
+  year: number;
+}
