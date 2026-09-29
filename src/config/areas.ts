@@ -5,6 +5,7 @@ import {
   IconlyDiscount,
   IconlyGraph,
   IconlyChart,
+  IconlyLocation2
 } from "@/components/ui/icons";
 
 export type Area =
@@ -83,6 +84,12 @@ const portalTontines = (base: string): NavItem => ({
   icon: IconlyGraph,
 });
 
+const branches = (base: string): NavItem => ({
+  label: "Agences",
+  href: `${base}/branches`,
+  icon: IconlyLocation2, // ou une icône plus adaptée si tu en as une
+});
+
 export const AREAS: Record<Area, AreaConfig> = {
   admin: {
     title: "Administration",
@@ -93,6 +100,7 @@ export const AREAS: Record<Area, AreaConfig> = {
       loans("/admin"),
       savings("/admin"),
       tontines("/admin"),
+      branches("/admin"),
       settings("/admin"),
     ],
   },
