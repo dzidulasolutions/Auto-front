@@ -1,4 +1,4 @@
-import { IconlyHome, IconlyUser, IconlyWallet, IconlyDiscount, IconlyGraph } from "@/components/ui/icons";
+import { IconlyHome, IconlyUser, IconlyWallet, IconlyDiscount, IconlyGraph, IconlyChart } from "@/components/ui/icons";
 
 export type Area = "admin" | "manager" | "agent" | "caissier" | "comptable" | "client";
 
@@ -46,11 +46,17 @@ const tontines = (base: string): NavItem => ({
   icon: IconlyGraph,
 });
 
+const settings = (base: string): NavItem => ({
+  label: "Paramètres",
+  href: `${base}/settings`,
+  icon: IconlyChart,
+});
+
 export const AREAS: Record<Area, AreaConfig> = {
   admin: {
     title: "Administration",
     shell: "desktop",
-    nav: [accueil("/admin"), clients("/admin"), loans("/admin"), savings("/admin"), tontines("/admin")],
+    nav: [accueil("/admin"), clients("/admin"), loans("/admin"), savings("/admin"), tontines("/admin"), settings("/admin")],
   },
   manager: {
     title: "Agence",
