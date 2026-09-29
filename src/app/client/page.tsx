@@ -1,3 +1,5 @@
+import PortalHome from "@/components/portal/portal-home";
+
 export default function Page() {
-  return <h1 className="text-2xl font-bold">Accueil</h1>;
+  return <PortalHome />;
 }
