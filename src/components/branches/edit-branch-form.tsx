@@ -4,27 +4,23 @@ import { useState } from "react";
 import Alert from "@/components/ui/alert";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { useCreateBranch } from "@/hooks/use-branches";
+import { useUpdateBranch } from "@/hooks/use-branches";
 import { getErrorMessage } from "@/lib/api/errors";
-import { suggestBranchCode } from "@/lib/branch-code";
+import type { Branch } from "@/types/branch";
 
-export default function CreateBranchForm({ onSuccess }: { onSuccess: () => void }) {
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
-  const [codeTouched, setCodeTouched] = useState(false);
-  const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
+interface Props {
+  branch: Branch;
+  onSuccess: () => void;
+}
+
+export default function EditBranchForm({ branch, onSuccess }: Props) {
+  const [name, setName] = useState(branch.name);
+  const [code, setCode] = useState(branch.code);
+  const [city, setCity] = useState(branch.city);
+  const [address, setAddress] = useState(branch.address ?? "");
   const [showError, setShowError] = useState(false);
 
-  const { mutate, isPending, error, reset } = useCreateBranch();
-
-  const handleCityChange = (value: string) => {
-    setCity(value);
-    // tant que l'Admin n'a pas touché au code, on le fait suivre le nom de la ville
-    if (!codeTouched) {
-      setCode(suggestBranchCode(value));
-    }
-  };
+  const { mutate, isPending, error, reset } = useUpdateBranch(branch.id);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,16 +36,8 @@ export default function CreateBranchForm({ onSuccess }: { onSuccess: () => void 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input placeholder="Nom de l'agence" value={name} onChange={(e) => setName(e.target.value)} required />
-      <Input placeholder="Ville" value={city} onChange={(e) => handleCityChange(e.target.value)} required />
-      <Input
-        placeholder="Code (ex : LOM-0472)"
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-          setCodeTouched(true);
-        }}
-        required
-      />
+      <Input placeholder="Ville" value={city} onChange={(e) => setCity(e.target.value)} required />
+      <Input placeholder="Code" value={code} onChange={(e) => setCode(e.target.value)} required />
       <Input
         placeholder="Adresse (facultatif)"
         value={address}
@@ -61,7 +49,7 @@ export default function CreateBranchForm({ onSuccess }: { onSuccess: () => void 
       )}
 
       <Button type="submit" loading={isPending} className="mt-2">
-        Créer l&apos;agence
+        Enregistrer
       </Button>
     </form>
   );
