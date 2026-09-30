@@ -3,8 +3,14 @@
 import { useState } from "react";
 import { logout } from "@/services/auth.service";
 import { ROUTES } from "@/config/routes";
+import { IconlyLogout } from "@/components/ui/icons";
 
-export default function LogoutButton({ className = "" }: { className?: string }) {
+interface Props {
+  className?: string;
+  iconOnly?: boolean;
+}
+
+export default function LogoutButton({ className = "", iconOnly = false }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
@@ -14,8 +20,14 @@ export default function LogoutButton({ className = "" }: { className?: string })
   };
 
   return (
-    <button onClick={handleClick} disabled={loading} className={`font-ui ${className}`}>
-      {loading ? "Déconnexion…" : "Se déconnecter"}
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      aria-label="Se déconnecter"
+      className={`font-ui inline-flex items-center gap-2 ${className}`}
+    >
+      <IconlyLogout size={16} color="currentColor" />
+      {!iconOnly && <span>{loading ? "Déconnexion…" : "Se déconnecter"}</span>}
     </button>
   );
 }

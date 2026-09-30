@@ -15,8 +15,8 @@ export default async function AreaLayout({
   if (!user) redirect(ROUTES.login);
 
   return (
-    <AppShell area={area} user={user} focus={AREAS[area].shell}>
-      {children}
-    </AppShell>
+<AppShell area={area} user={user} focus={AREAS[area].shell} isClient={area === "client"}>
+  {children}
+</AppShell>
   );
 }
