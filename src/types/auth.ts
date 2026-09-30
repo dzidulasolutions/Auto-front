@@ -44,3 +44,26 @@ export interface SessionUser {
 }
 
 export const PRIVILEGED_ROLES: Role[] = ["SuperAdmin", "Admin"];
+
+export interface UserProfileData {
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  birthDate: string | null;
+  avatarUrl: string | null;
+}
+
+export interface Me {
+  id: string;
+  email: string;
+  phone: string | null;
+  firstName: string;
+  lastName: string;
+  status: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  mfaEnabled: boolean;
+  role: { id: string; name: Role };
+  branchId: string | null;
+  profile: UserProfileData | null;
+}

@@ -2,6 +2,7 @@ import type { Area } from "@/config/areas";
 import type { SessionUser } from "@/types/auth";
 import LogoutButton from "./logout-button";
 import NavLinks from "./nav-links";
+import Link from "next/link";
 
 interface Props {
   area: Area;
@@ -23,12 +24,12 @@ export default function AppShell({ area, user, focus, children }: Props) {
           <NavLinks area={area} variant="sidebar" />
         </div>
         <div className="flex flex-col gap-3">
-          <div>
+          <Link href="/profil" className="flex flex-col gap-0.5 hover:opacity-80 transition-opacity">
             <p className="text-sm font-medium">
               {user.firstName} {user.lastName}
             </p>
             <p className="text-xs text-white/60">{user.label}</p>
-          </div>
+          </Link>
           <LogoutButton className="text-xs text-white/60 hover:text-white text-left" />
         </div>
       </aside>
@@ -38,7 +39,9 @@ export default function AppShell({ area, user, focus, children }: Props) {
         <header className="lg:hidden sticky top-0 z-10 h-14 px-4 bg-black text-white flex items-center justify-between">
           <span className="font-bold text-lg">Autogo.</span>
           <div className="flex items-center gap-4">
-            <span className="text-xs text-white/60">{user.firstName}</span>
+            <Link href="/profil" className="text-xs text-white/60 hover:text-white">
+              {user.firstName}
+            </Link>
             <LogoutButton className="text-xs text-white/60" />
           </div>
         </header>
