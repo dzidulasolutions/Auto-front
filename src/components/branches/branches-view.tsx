@@ -122,6 +122,7 @@ export default function BranchesView() {
             {confirmBranch?.name} ne sera plus utilisable pour de nouvelles opérations. Cette action
             peut être annulée par un administrateur.
           </p>
+          
           <div className="flex gap-2 justify-end">
             <Button variant="secondary" onClick={() => setConfirmBranch(null)}>
               Annuler
