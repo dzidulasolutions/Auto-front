@@ -18,3 +18,8 @@ export interface CreateBranchInput {
 }
 
 export type UpdateBranchInput = Partial<CreateBranchInput>;
+
+export interface BranchStats {
+  clientCount: number;
+  staffByRole: Record<string, number>;
+}
