@@ -90,6 +90,13 @@ const branches = (base: string): NavItem => ({
   icon: IconlyLocation2, // ou une icône plus adaptée si tu en as une
 });
 
+const users = (base: string): NavItem => ({
+  label: "Utilisateurs",
+  href: `${base}/users`,
+  icon: IconlyUser,
+});
+
+
 export const AREAS: Record<Area, AreaConfig> = {
   admin: {
     title: "Administration",
@@ -102,6 +109,7 @@ export const AREAS: Record<Area, AreaConfig> = {
       tontines("/admin"),
       branches("/admin"),
       settings("/admin"),
+      users("/admin")
     ],
   },
   manager: {
