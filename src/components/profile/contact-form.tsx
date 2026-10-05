@@ -2,12 +2,18 @@
 
 import { useState } from "react";
 import Alert from "@/components/ui/alert";
-import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useUpdateContact } from "@/hooks/use-me";
 import { getErrorMessage } from "@/lib/api/errors";
 import type { Me } from "@/types/auth";
+import VerifyField from "./verify-field";
+import {
+  useSendEmailVerification,
+  useSendPhoneVerification,
+  useVerifyEmail,
+  useVerifyPhone,
+} from "@/hooks/use-verification";
 
 export default function ContactForm({ me }: { me: Me }) {
   const [email, setEmail] = useState(me.email);
@@ -15,7 +21,13 @@ export default function ContactForm({ me }: { me: Me }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
 
+  const { mutateAsync: sendEmailCode } = useSendEmailVerification();
+  const { mutateAsync: confirmEmail } = useVerifyEmail();
+  const { mutateAsync: sendPhoneCode } = useSendPhoneVerification();
+  const { mutateAsync: confirmPhone } = useVerifyPhone();
+
   const { mutate, isPending, error, reset } = useUpdateContact();
+  console.log("RENDER ContactForm", me.emailVerified, me.phoneVerified);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,16 +52,26 @@ export default function ContactForm({ me }: { me: Me }) {
 
       <div className="flex flex-col gap-1.5">
         <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Badge tone={me.emailVerified ? "success" : "warning"}>
-          {me.emailVerified ? "Vérifié" : "Non vérifié"}
-        </Badge>
+        <VerifyField
+          verified={me.emailVerified}
+          label="Email"
+          disabled={!email.trim()}
+          onSendCode={() => sendEmailCode()}
+          onVerify={(code) => confirmEmail(code)}
+          onVerified={() => { }}
+        />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <Input type="tel" placeholder="Téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} />
-        <Badge tone={me.phoneVerified ? "success" : "warning"}>
-          {me.phoneVerified ? "Vérifié" : "Non vérifié"}
-        </Badge>
+        <VerifyField
+          verified={me.phoneVerified}
+          label="Téléphone"
+          disabled={!phone.trim()}
+          onSendCode={() => sendPhoneCode()}
+          onVerify={(code) => confirmPhone(code)}
+          onVerified={() => { }}
+        />
       </div>
 
       <Button type="submit" loading={isPending} className="mt-2">

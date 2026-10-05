@@ -14,7 +14,7 @@ export function useUpdateProfile() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdateProfileInput) => updateMyProfile(input),
-    onSuccess: (data) => queryClient.setQueryData(meKeys.me, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: meKeys.me }),
   });
 }
 
@@ -22,6 +22,6 @@ export function useUpdateContact() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdateContactInput) => updateMyContact(input),
-    onSuccess: (data) => queryClient.setQueryData(meKeys.me, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: meKeys.me }),
   });
 }

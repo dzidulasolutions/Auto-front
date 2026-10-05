@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-
+import { useSyncExternalStore } from "react";
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -12,6 +13,12 @@ interface Props {
 }
 
 export default function Modal({ open, onClose, title, variant = "modal", children }: Props) {
+const mounted = useSyncExternalStore(
+  () => () => {}, 
+  () => true,     
+  () => false,    
+);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -23,9 +30,11 @@ export default function Modal({ open, onClose, title, variant = "modal", childre
     };
   }, [open, onClose]);
 
+  if (!mounted) return null;
+
   const fromBottom = variant === "drawer";
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-end sm:justify-center p-0 sm:p-4">
@@ -37,7 +46,6 @@ export default function Modal({ open, onClose, title, variant = "modal", childre
             className="fixed inset-0 -z-10 bg-black/50"
           />
 
-          {/* Seule boîte qui porte la largeur — le parent la centre */}
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -48,7 +56,6 @@ export default function Modal({ open, onClose, title, variant = "modal", childre
             transition={{ duration: 0.2 }}
             className="w-full sm:w-120 bg-white rounded-t-surface sm:rounded-surface shadow-elevated"
           >
-            {/* w-full ici, jamais une largeur propre : il épouse la boîte ci-dessus */}
             <div className="max-h-[90dvh] w-full overflow-y-auto">
               {title && (
                 <div className="w-full px-6 pt-6 pb-4">
@@ -60,6 +67,7 @@ export default function Modal({ open, onClose, title, variant = "modal", childre
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
