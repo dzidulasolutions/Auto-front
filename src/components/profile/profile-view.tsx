@@ -6,6 +6,8 @@ import { useMe } from "@/hooks/use-me";
 import { getErrorMessage } from "@/lib/api/errors";
 import ContactForm from "./contact-form";
 import ProfileInfoForm from "./profile-info-form";
+import MfaSection from "./mfa-section";
+
 
 export default function ProfileView() {
   const { data: me, isPending, isError, error, refetch } = useMe();
@@ -46,6 +48,12 @@ export default function ProfileView() {
         <h2 className="text-h2">Informations</h2>
         <ProfileInfoForm me={me} />
       </div>
+
+      <div className="bg-white p-5 flex flex-col gap-4">
+        <h2 className="text-h2">Sécurité</h2>
+        <MfaSection enabled={me.mfaEnabled} />
+      </div>
+
     </div>
   );
 }

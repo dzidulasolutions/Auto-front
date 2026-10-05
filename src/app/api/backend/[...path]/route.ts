@@ -4,14 +4,26 @@ import { errorResponse } from "@/lib/api/proxy";
 
 type Ctx = { params: Promise<{ path: string[] }> };
 
-const BLOCKED = ["auth", "client-portal/auth", "uploads"];
+const BLOCKED = [
+  "auth/login",
+  "auth/refresh",
+  "auth/logout",
+  "auth/forgot-password",
+  "auth/reset-password",
+  "client-portal/auth",
+  "uploads",
+];
+
+function isBlocked(target: string): boolean {
+  return BLOCKED.some((b) => target === b || target.startsWith(`${b}/`));
+}
 
 async function forward(req: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
   const target = path.join("/");
 
   const unsafe = path.some((s) => s === ".." || s === ".");
-  const blocked = BLOCKED.some((b) => target === b || target.startsWith(`${b}/`));
+  const blocked = isBlocked(target);
   if (unsafe || blocked) {
     return NextResponse.json({ messages: ["Route non autorisée."] }, { status: 403 });
   }
