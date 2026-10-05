@@ -67,3 +67,11 @@ export interface Me {
   branchId: string | null;
   profile: UserProfileData | null;
 }
+
+export interface Session {
+  id: string;
+  userAgent: string | null;
+  ipAddress: string | null;
+  createdAt: string;
+  expiresAt: string;
+}
