@@ -7,6 +7,7 @@ import {
   getUser,
   listRoles,
   listUsers,
+  reactivateUser,
   updateUser,
 } from "@/services/users.service";
 import type { CreateUserInput, UpdateUserInput } from "@/types/user";
@@ -14,7 +15,15 @@ import type { CreateUserInput, UpdateUserInput } from "@/types/user";
 const usersKey = ["users"] as const;
 
 export function useUsers() {
-  return useQuery({ queryKey: usersKey, queryFn: listUsers });
+  return useQuery({ queryKey: usersKey, queryFn: () => listUsers(true) });
+}
+
+export function useReactivateUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reactivateUser,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: usersKey }),
+  });
 }
 
 export function useUser(id: string) {

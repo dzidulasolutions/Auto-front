@@ -11,6 +11,8 @@ import { getErrorMessage } from "@/lib/api/errors";
 import { IconlyTrash } from "@/components/ui/icons";
 import type { StaffMember } from "@/types/user";
 import CreateUserForm from "./create-user-form";
+import { useReactivateUser } from "@/hooks/use-users";
+
 
 export default function UsersView() {
   const { data: users, isPending, isError, error, refetch } = useUsers();
@@ -20,6 +22,9 @@ export default function UsersView() {
   const [confirmUser, setConfirmUser] = useState<StaffMember | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+
+  const { mutate: reactivate } = useReactivateUser();
+  const [reactivatingId, setReactivatingId] = useState<string | null>(null);
 
   const handleDeactivate = () => {
     if (!confirmUser) return;
@@ -71,11 +76,12 @@ export default function UsersView() {
                 </p>
                 <p className="text-caption text-muted truncate">{u.email} · {u.role.name}</p>
               </div>
+
               <div className="flex items-center gap-2 shrink-0">
                 <Badge tone={u.status === "ACTIVE" ? "success" : "neutral"}>
                   {u.status === "ACTIVE" ? "Actif" : "Désactivé"}
                 </Badge>
-                {u.status === "ACTIVE" && (
+                {u.status === "ACTIVE" ? (
                   <button
                     type="button"
                     onClick={() => setConfirmUser(u)}
@@ -84,6 +90,20 @@ export default function UsersView() {
                   >
                     <IconlyTrash size={16} color="currentColor" />
                   </button>
+                ) : (
+                  <Button
+                    size="sm"
+                    loading={reactivatingId === u.id}
+                    onClick={() => {
+                      setReactivatingId(u.id);
+                      reactivate(u.id, {
+                        onSuccess: () => setNotice("Utilisateur réactivé."),
+                        onSettled: () => setReactivatingId(null),
+                      });
+                    }}
+                  >
+                    Réactiver
+                  </Button>
                 )}
               </div>
             </div>
