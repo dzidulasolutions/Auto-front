@@ -28,3 +28,4 @@ export const createTransaction = (input: CreateTransactionInput) =>
 
 export const cancelTransaction = (id: string, reason: string) =>
   api<Transaction>(`/transactions/${id}/cancel`, { method: "PATCH", body: { reason } });
+

@@ -75,3 +75,5 @@ export interface Session {
   createdAt: string;
   expiresAt: string;
 }
+
+export const CAN_CANCEL_TRANSACTION_ROLES: Role[] = ["SuperAdmin", "Admin", "Comptable"];
