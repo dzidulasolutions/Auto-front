@@ -9,6 +9,8 @@ import {
   listLoans,
   rejectLoan,
   repayLoan,
+  rescheduleLoan,
+  RescheduleLoanInput,
   submitLoan,
   type ListLoansParams,
 } from "@/services/loans.service";
@@ -115,5 +117,19 @@ export function useAllLoans(status?: LoanStatus, page = 1, limit = 20) {
     queryKey: loanKeys.list({ status, page, limit }),
     queryFn: () => listLoans({ status, page, limit }),
     placeholderData: (prev) => prev,
+  });
+}
+
+export function useRescheduleLoan(clientId: string, loanId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: RescheduleLoanInput) => rescheduleLoan(loanId, input),
+    onSuccess: (updatedLoan) => {
+      queryClient.setQueryData(loanKeys.detail(loanId), (old: unknown) =>
+        old ? { ...(old as object), ...updatedLoan } : updatedLoan,
+      );
+      queryClient.invalidateQueries({ queryKey: loanKeys.detail(loanId) });
+      queryClient.invalidateQueries({ queryKey: loanKeys.list({ clientId }) });
+    },
   });
 }

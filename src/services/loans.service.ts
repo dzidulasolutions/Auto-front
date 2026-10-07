@@ -51,3 +51,11 @@ export const repayLoan = (id: string, amount: number) =>
     method: "PATCH",
     body: { amount, idempotencyKey: newIdempotencyKey() },
   });
+
+export interface RescheduleLoanInput {
+  newDurationMonths: number;
+  penaltyAmount?: number;
+}
+
+export const rescheduleLoan = (id: string, input: RescheduleLoanInput) =>
+  api<LoanWithSchedule>(`/loans/${id}/reschedule`, { method: "PATCH", body: input });
