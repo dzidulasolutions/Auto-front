@@ -59,3 +59,6 @@ export interface RescheduleLoanInput {
 
 export const rescheduleLoan = (id: string, input: RescheduleLoanInput) =>
   api<LoanWithSchedule>(`/loans/${id}/reschedule`, { method: "PATCH", body: input });
+
+
+export const getLoanPassbookUrl = (id: string) => `/api/backend/loans/${id}/passbook-pdf`;

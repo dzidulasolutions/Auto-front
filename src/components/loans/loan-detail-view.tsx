@@ -29,7 +29,8 @@ import LoanSchedule from "./loan-schedule";
 import { useRescheduleLoan } from "@/hooks/use-loans";
 import RescheduleLoanForm from "./reschedule-loan-form";
 import { PRIVILEGED_ROLES } from "@/types/auth";
-
+import { getLoanPassbookUrl } from "@/services/loans.service";
+import { IconlyPaper } from "../ui/icons";
 
 
 export default function LoanDetailView({ loanId }: { loanId: string }) {
@@ -175,6 +176,14 @@ export default function LoanDetailView({ loanId }: { loanId: string }) {
                 <Button variant="secondary" size="sm" onClick={() => setRescheduleOpen(true)}>
                     Réétaler les échéances
                 </Button>
+            )}
+
+            {(loan.status === "DISBURSED" || loan.status === "CLOSED") && (
+                <a href={`/api/backend/loans/${loanId}/passbook-pdf`}>
+                    <Button variant="secondary" size="sm">
+                        Télécharger l&apos;échéancier (PDF) <IconlyPaper color="CurrentColor" size={24}/>
+                    </Button>
+                </a>
             )}
 
             {(loan.status === "DISBURSED" || loan.status === "CLOSED") && (
