@@ -22,11 +22,14 @@ export default function TransactionRow({ tx }: { tx: Transaction }) {
   const canCancel = !!role && CAN_CANCEL_TRANSACTION_ROLES.includes(role);
   const isCredit = CREDIT.has(tx.type);
   const amount = Number(tx.amount);
+  
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { mutate: cancel, isPending } = useCancelTransaction();
+
+  const CANCELLABLE_TYPES = new Set(["DEPOSIT", "WITHDRAWAL"]);
 
   const handleCancel = () => {
     if (!reason.trim()) return;
@@ -62,7 +65,7 @@ export default function TransactionRow({ tx }: { tx: Transaction }) {
         {isCredit ? "+" : "−"} {formatFcfa(amount)}
       </span>
 
-      {canCancel && tx.status === "COMPLETED" && (
+      {canCancel && tx.status === "COMPLETED" && CANCELLABLE_TYPES.has(tx.type) && (
         <button
           type="button"
           onClick={() => setConfirmOpen(true)}

@@ -16,10 +16,15 @@ export function useTransactions(params: ListTransactionsParams) {
   });
 }
 
+
+
 export function useCancelTransaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, reason }: { id: string; reason: string }) => cancelTransaction(id, reason),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: transactionKeys.all }),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: transactionKeys.all });
+      queryClient.invalidateQueries({ queryKey: ["savings"] });
+    },
   });
 }
