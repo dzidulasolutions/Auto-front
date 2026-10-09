@@ -20,6 +20,9 @@ const LIMIT = 20;
 
 export default function ClientsView() {
   const [page, setPage] = useState(1);
+  const [showInactive, setShowInactive] = useState(false);
+
+  const list = useClients(page, LIMIT, showInactive);
   const [query, setQuery] = useState("");
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -30,7 +33,6 @@ export default function ClientsView() {
   const searching = debounced.length >= SEARCH_MIN_CHARS;
   const tooShort = trimmed.length > 0 && trimmed.length < SEARCH_MIN_CHARS;
 
-  const list = useClients(page, LIMIT);
   const search = useClientSearch(searching ? debounced : "");
 
   const current = searching ? search : list;
@@ -43,7 +45,6 @@ export default function ClientsView() {
     : meta && `${meta.total} ${meta.total > 1 ? "clients" : "client"}`;
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
   return (
     <div className="flex flex-col gap-8">
       <header className="flex items-start justify-between gap-4">
@@ -61,6 +62,8 @@ export default function ClientsView() {
         <Alert type="success" message={successMessage} onClose={() => setSuccessMessage(null)} />
       )}
 
+
+
       <div className="flex flex-col gap-2">
         <SearchInput
           value={query}
@@ -76,6 +79,18 @@ export default function ClientsView() {
           </p>
         )}
       </div>
+
+            <label className="flex items-center gap-2 text-small text-muted">
+        <input
+          type="checkbox"
+          checked={showInactive}
+          onChange={(e) => {
+            setShowInactive(e.target.checked);
+            setPage(1);
+          }}
+        />
+        Afficher les clients désactivés
+      </label>
 
       {current.isPending && <ClientsListSkeleton showBranch={!searching} />}
 

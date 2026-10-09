@@ -18,6 +18,7 @@ export interface Client {
   assignedAgentId: string | null;
   createdAt: string;
   updatedAt: string;
+  deletedAt: string | null;
   branch?: ClientBranch;
 }
 
@@ -44,3 +45,6 @@ export interface UpdateClientInput {
   photoUrl?: string;
   idDocumentUrl?: string;
 }
+
+export const isClientActive = (c: Pick<Client, never> & { deletedAt?: string | null }) =>
+  !c.deletedAt;

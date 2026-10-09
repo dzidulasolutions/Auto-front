@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Badge from "@/components/ui/badge";
+import Button from "@/components/ui/button";
 import { formatDate } from "@/lib/format";
 import type { Client } from "@/types/client";
 import ClientAvatar from "./client-avatar";
-import Link from "next/link";
+import { useReactivateClient } from "@/hooks/use-client";
 
 const COLS_WITH_BRANCH = "grid-cols-[2fr_1.2fr_1.2fr_1.2fr_1fr]";
 const COLS_NO_BRANCH = "grid-cols-[2fr_1.2fr_1.2fr_1fr]";
@@ -9,6 +15,8 @@ const COLS_NO_BRANCH = "grid-cols-[2fr_1.2fr_1.2fr_1fr]";
 export default function ClientRows({ items }: { items: Client[] }) {
   const showBranch = items.some((c) => c.branch);
   const cols = showBranch ? COLS_WITH_BRANCH : COLS_NO_BRANCH;
+  const { mutate: reactivate } = useReactivateClient();
+  const [reactivatingId, setReactivatingId] = useState<string | null>(null);
 
   return (
     <>
@@ -26,12 +34,33 @@ export default function ClientRows({ items }: { items: Client[] }) {
               <p className="text-xs text-black/50">{c.clientNumber}</p>
             </div>
 
+            {c.deletedAt && (
+              <Badge tone="neutral" className="shrink-0">
+                Désactivé
+              </Badge>
+            )}
 
-            <a href={`tel:${c.phone}`}
-              className="relative z-10 text-xs text-black/60 py-3 pl-2 hover:text-black transition-colors"
-            >
-              {c.phone}
-            </a>
+            {c.deletedAt ? (
+              <Button
+                size="sm"
+                loading={reactivatingId === c.id}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setReactivatingId(c.id);
+                  reactivate(c.id, { onSettled: () => setReactivatingId(null) });
+                }}
+              >
+                Réactiver
+              </Button>
+            ) : (
+              <a
+                href={`tel:${c.phone}`}
+                className="relative z-10 text-xs text-black/60 py-3 pl-2 hover:text-black transition-colors"
+              >
+                {c.phone}
+              </a>
+            )}
           </li>
         ))}
       </ul>
@@ -61,7 +90,10 @@ export default function ClientRows({ items }: { items: Client[] }) {
                 <p className="text-xs text-black/50 truncate">{c.email ?? "Pas d'email"}</p>
               </div>
             </div>
-            <span>{c.clientNumber}</span>
+            <span>
+              {c.clientNumber}
+              {c.deletedAt && <Badge tone="neutral" className="ml-2">Désactivé</Badge>}
+            </span>
             <span>{c.phone}</span>
             {showBranch && <span className="truncate">{c.branch?.name ?? "—"}</span>}
             <span className="text-black/60">{formatDate(c.createdAt)}</span>

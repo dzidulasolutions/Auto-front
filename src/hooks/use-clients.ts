@@ -5,16 +5,18 @@ import { listClients, searchClients } from "@/services/clients.service";
 
 export const SEARCH_MIN_CHARS = 2;
 
+
 export const clientKeys = {
   all: ["clients"] as const,
-  list: (page: number, limit: number) => ["clients", "list", page, limit] as const,
+  list: (page: number, limit: number, includeInactive = false) =>
+    ["clients", "list", page, limit, includeInactive] as const,
   search: (q: string) => ["clients", "search", q] as const,
 };
 
-export function useClients(page: number, limit = 20) {
+export function useClients(page: number, limit = 20, includeInactive = false) {
   return useQuery({
-    queryKey: clientKeys.list(page, limit),
-    queryFn: () => listClients({ page, limit }),
+    queryKey: clientKeys.list(page, limit, includeInactive),
+    queryFn: () => listClients({ page, limit, includeInactive }),
     placeholderData: keepPreviousData,
   });
 }

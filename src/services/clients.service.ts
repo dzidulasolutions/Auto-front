@@ -6,10 +6,17 @@ export const getClient = (id: string) => api<Client>(`/clients/${id}`);
 export interface ListClientsParams {
   page?: number;
   limit?: number;
+  includeInactive?: boolean;
 }
 
+
 export const listClients = (p: ListClientsParams = {}) =>
-  api<Paginated<Client>>(`/clients${qs({ page: p.page, limit: p.limit })}`);
+  api<Paginated<Client>>(
+    `/clients${qs({ page: p.page, limit: p.limit, includeInactive: p.includeInactive ? "true" : undefined })}`,
+  );
+
+export const reactivateClient = (id: string) =>
+  api<Client>(`/clients/${id}/reactivate`, { method: "PATCH" });
 
 
 export const searchClients = (q: string) =>

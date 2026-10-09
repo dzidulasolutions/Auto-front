@@ -6,32 +6,30 @@ import Alert from "@/components/ui/alert";
 import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
-import { IconlyDocument } from "@/components/ui/icons";
+import { IconlyDocument, IconlyEdit, IconlyTrash } from "@/components/ui/icons";
 import { getErrorMessage } from "@/lib/api/errors";
 import { formatDate } from "@/lib/format";
 import ClientAvatar from "./client-avatar";
 import ClientDetailSkeleton from "./client-detail-skeleton";
-import { useClient, useProfileComplete } from "@/hooks/use-client";
+import { useClient, useProfileComplete, useReactivateClient } from "@/hooks/use-client";
 import { useDeleteClient } from "@/hooks/use-delete-client";
 import EditClientForm from "./edit-client-form";
-import { IconlyEdit, IconlyTrash } from "@/components/ui/icons";
 import ClientTransactions from "@/components/transactions/client-transactions";
 import ClientSavings from "@/components/savings/client-savings";
 import ClientTontines from "@/components/tontines/client-tontines";
 import ClientLoans from "@/components/loans/client-loans";
-
-
 
 export default function ClientDetailView({ id, area }: { id: string; area: string }) {
   const router = useRouter();
   const { data: client, isPending, isError, error, refetch } = useClient(id);
   const { data: complete } = useProfileComplete(id);
   const { mutate: deleteClient, isPending: deleting } = useDeleteClient();
-
+  const { mutate: reactivate, isPending: reactivating } = useReactivateClient();
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
 
   if (isPending) return <ClientDetailSkeleton />;
 
@@ -73,18 +71,35 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
               {client.firstName} {client.lastName}
             </h1>
             <p className="text-small text-muted">{client.clientNumber}</p>
+            {client.deletedAt && (
+              <Badge tone="neutral" className="mt-1">
+                Désactivé
+              </Badge>
+            )}
           </div>
         </div>
 
         <div className="flex gap-2 shrink-0">
-          <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
-            <IconlyEdit size={16} color="currentColor" />
-            <span className="hidden sm:inline">Modifier</span>
-          </Button>
-          <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
-            <IconlyTrash size={16} color="currentColor" />
-            <span className="hidden sm:inline">Supprimer</span>
-          </Button>
+          {client.deletedAt ? (
+            <Button
+              size="sm"
+              loading={reactivating}
+              onClick={() => reactivate(client.id, { onSuccess: () => setNotice("Client réactivé.") })}
+            >
+              Réactiver
+            </Button>
+          ) : (
+            <>
+              <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
+                <IconlyEdit size={16} color="currentColor" />
+                <span className="hidden sm:inline">Modifier</span>
+              </Button>
+              <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
+                <IconlyTrash size={16} color="currentColor" />
+                <span className="hidden sm:inline">Supprimer</span>
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -126,7 +141,7 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
         <div className="flex flex-col gap-4">
           <p className="text-small text-muted">
             {client.firstName} {client.lastName} sera retiré de la liste. Cette action peut être
-            annulée uniquement par un administrateur du système.
+            annulée par un administrateur.
           </p>
           <div className="flex gap-2 justify-end">
             <Button variant="secondary" onClick={() => setConfirmDelete(false)}>
@@ -138,6 +153,7 @@ export default function ClientDetailView({ id, area }: { id: string; area: strin
           </div>
         </div>
       </Modal>
+
       <ClientTransactions clientId={client.id} />
       <ClientSavings clientId={client.id} />
       <ClientTontines clientId={client.id} />
