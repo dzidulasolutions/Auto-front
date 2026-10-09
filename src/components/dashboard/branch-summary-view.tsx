@@ -4,7 +4,6 @@ import { useState } from "react";
 import Button from "@/components/ui/button";
 import Select from "@/components/ui/select";
 import Skeleton from "@/components/ui/skeleton";
-import { chart_display_v0 } from "@/lib/chart"; 
 import { useBranches } from "@/hooks/use-branches";
 import { useBranchSummary } from "@/hooks/use-dashboard";
 import { getErrorMessage } from "@/lib/api/errors";
